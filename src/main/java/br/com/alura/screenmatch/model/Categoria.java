@@ -9,7 +9,7 @@ public enum Categoria {
     AVENTURA("Adventure");
     private String categoriaOmdb;
 
-    private Categoria(String catego1riaOmdb) {
+    private Categoria(String categoriaOmdb) {
         this.categoriaOmdb = categoriaOmdb;
     }
 

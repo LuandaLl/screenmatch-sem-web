@@ -17,11 +17,12 @@ import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
-
+import io.github.cdimascio.dotenv.Dotenv;
 public class Principal {
+    private Dotenv dotenv = Dotenv.load();
+    private final String API_KEY = dotenv.get("API_KEY");;
     private Scanner leitura = new Scanner(System.in);
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "&apikey=4e1b1cd7";
     private ConsumoApi consumoApi = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
     private List<DadosSerie> listaSerie = new ArrayList<>();
