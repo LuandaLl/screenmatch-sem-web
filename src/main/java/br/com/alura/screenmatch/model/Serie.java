@@ -1,6 +1,6 @@
 package br.com.alura.screenmatch.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import java.util.Optional;
 
 public class Serie {
     private  String titulo;
@@ -12,15 +12,77 @@ public class Serie {
     private String sinopse; 
 
     public Serie(DadosSerie dadosSeries) {
-        this.atores = atores;
-        this.avaliacao = OptionalDouble.valueOf(Double.valueOf(avaliacao)).orElse(0.0);
-        this.genero = Categoria.fromString(dadosSeries.genero().split(",",[0].trim()));
-        this.poster = poster;
-        this.sinopse = sinopse;
-        this.titulo = titulo;
-        this.totalTemporadas = totalTemporadas;
+        this.atores = dadosSeries.atores();
+        this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim());
+        this.poster = dadosSeries.poster();
+        this.sinopse = dadosSeries.sinopse();
+        this.titulo = dadosSeries.titulo();
+        this.totalTemporadas = dadosSeries.totalTemporadas();
 
     }
+
+
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public Double getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public int getTotalTemporadas() {
+        return totalTemporadas;
+    }
+
+
+    public void setTotalTemporadas(int totalTemporadas) {
+        this.totalTemporadas = totalTemporadas;
+    }
+
+    public Categoria getGenero() {
+        return genero;
+    }
+
+
+    public void setGenero(Categoria genero) {
+        this.genero = genero;
+    }
+
+    public String getAtores() {
+        return atores;
+    }
+
+  public void setAtores(String atores) {
+        this.atores = atores;
+    }
+
+  public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public String getSinopse() {
+        return sinopse;
+    }
+
+    public void setSinopse(String sinopse) {
+        this.sinopse = sinopse;
+    }
+
+
+
 
 
 
@@ -28,9 +90,9 @@ public class Serie {
     @Override
     public final String toString() {
         // TODO Auto-generated method stub
-        return "Titulo Série: " + titulo +"\n" +
+        return   "Gênero: " + genero + "\n" +
+                "Titulo Série: " + titulo +"\n" +
                 "Avaliação: " + avaliacao + "\n" +
-                "Gênero: " + genero + "\n" +
                 "Total de Temporadas: " + totalTemporadas + "\n"+
                 "Atores: " + atores + "\n" +
                 "Poster: " + poster + "\n" +

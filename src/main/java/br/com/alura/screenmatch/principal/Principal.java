@@ -14,6 +14,7 @@ import br.com.alura.screenmatch.model.DadosEpisodios;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
+import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 
@@ -110,7 +111,14 @@ public class Principal {
     }
 
     private void listarSerieBuscada() {
-        listaSerie.forEach(System.out::println);
+        List<Serie> series = listaSerie.stream()
+                        .map(d-> new Serie(d))
+                                .collect(Collectors.toList());
+       
+                              
+        series.stream()
+                    .sorted(Comparator.comparing(Serie::getGenero))
+                    .forEach(System.out::println);
     }
 
     private void exibirTop5Episodios() {
