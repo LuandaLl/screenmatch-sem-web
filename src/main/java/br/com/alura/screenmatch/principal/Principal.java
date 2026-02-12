@@ -15,12 +15,19 @@ import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 import io.github.cdimascio.dotenv.Dotenv;
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 public class Principal {
     private Dotenv dotenv = Dotenv.load();
-    private final String API_KEY = dotenv.get("API_KEY");;
+    private final String API_KEY = dotenv.get("API_KEY");
     private Scanner leitura = new Scanner(System.in);
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private ConsumoApi consumoApi = new ConsumoApi();
@@ -28,6 +35,13 @@ public class Principal {
     private List<DadosSerie> listaSerie = new ArrayList<>();
     private List<Episodio> episodios = new ArrayList<>();
     private List<DadosTemporada> temporadas = new ArrayList<>();
+    private SerieRepository repositorio;
+
+   
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void exibeMenu() {
         var opcao = -1;
@@ -82,7 +96,9 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        listaSerie.add(dados);
+        Serie serie = new Serie(dados);
+        //listaSerie.add(dados);
+        repositorio.save(serie);
         System.out.println(dados);
     }
 

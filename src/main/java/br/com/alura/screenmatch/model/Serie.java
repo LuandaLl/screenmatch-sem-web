@@ -1,4 +1,6 @@
 package br.com.alura.screenmatch.model;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import br.com.alura.screenmatch.service.ConsultaMyMemory;
@@ -10,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "series")
@@ -27,6 +30,9 @@ public class Serie {
     private  String atores;
     private String poster;
     private String sinopse;
+    @Transient
+    private List<Episodio> episodios = new ArrayList<>();
+    
      
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();
@@ -103,6 +109,15 @@ public class Serie {
 
     public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
+
+    }
+
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
     }
 
 
@@ -119,10 +134,6 @@ public class Serie {
             
                 ;
     }
-
-    
-
-
 
         
 }
