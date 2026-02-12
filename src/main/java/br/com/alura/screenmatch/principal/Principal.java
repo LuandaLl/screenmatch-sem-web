@@ -128,11 +128,7 @@ public class Principal {
     }
 
     private void listarSerieBuscada() {
-        List<Serie> series = listaSerie.stream()
-                        .map(d-> new Serie(d))
-                                .collect(Collectors.toList());
-       
-                              
+        List<Serie> series = repositorio.findAll();        
         series.stream()
                     .sorted(Comparator.comparing(Serie::getGenero))
                     .forEach(System.out::println);

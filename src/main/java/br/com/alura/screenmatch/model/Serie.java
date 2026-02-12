@@ -15,28 +15,29 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "series")
+@Table(name = "series") //nomeia a tabela no banco de dados
 public class Serie {
 
-    @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @Id //identifica a chave padrão
+    @GeneratedValue(strategy =GenerationType.IDENTITY) //Define a estrateǵia de geração de id
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true) //define que não pode haver duplicação de dados
     private  String titulo;
     private Double avaliacao;
     private int totalTemporadas;
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) //escolhe o modo de numeração do enum categoria
     private Categoria genero;
     private  String atores;
     private String poster;
     private String sinopse;
-    @Transient
+    @Transient //ignora a lista de episódios por enquanto
     private List<Episodio> episodios = new ArrayList<>();
     
-     
+    public Serie(){}
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();
-        this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim());
+        this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        
+        this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim()); //pega o enum por string, separa por virgula e ignora espaços vazios
         this.poster = dadosSeries.poster();
         this.sinopse = ConsultaMyMemory.obterTraducao(dadosSeries.sinopse()).trim();  
         this.titulo = dadosSeries.titulo();
