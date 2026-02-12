@@ -1,17 +1,33 @@
 package br.com.alura.screenmatch.model;
 import java.util.Optional;
-import br.com.alura.screenmatch.service.ConsultaMyMemory;
 
+import br.com.alura.screenmatch.service.ConsultaMyMemory;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "series")
 public class Serie {
+
+    @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
     private  String titulo;
     private Double avaliacao;
     private int totalTemporadas;
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
     private  String atores;
     private String poster;
     private String sinopse;
      
-
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();
         this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim());
@@ -22,7 +38,14 @@ public class Serie {
 
     }
 
+     public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
 
     public String getTitulo() {
         return titulo;
@@ -83,11 +106,6 @@ public class Serie {
     }
 
 
-
-
-
-
-
     @Override
     public final String toString() {
         // TODO Auto-generated method stub
@@ -101,6 +119,7 @@ public class Serie {
             
                 ;
     }
+
     
 
 
