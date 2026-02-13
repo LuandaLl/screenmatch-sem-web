@@ -1,7 +1,6 @@
 package br.com.alura.screenmatch.model;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import br.com.alura.screenmatch.service.ConsultaMyMemory;
 import jakarta.persistence.CascadeType;
@@ -42,7 +41,7 @@ public class Serie {
     public Serie(){}
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();
-        this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        
+        this.avaliacao = Double.valueOf(dadosSeries.avaliacao());     
         this.poster = dadosSeries.poster(); 
         this.titulo = dadosSeries.titulo();
         this.totalTemporadas = dadosSeries.totalTemporadas();
@@ -57,6 +56,7 @@ public class Serie {
 
         } catch(Exception e) {
             System.out.println("Não foi possivel realizar a tradução. " + e);
+            this.sinopse = dadosSeries.sinopse(); 
         }
 
     }
@@ -142,7 +142,7 @@ public class Serie {
 
     @Override
     public final String toString() {
-        return   "Gênero: " + genero + "\n" +
+        return   "\nGênero: " + genero + "\n" +
                 "Titulo Série: " + titulo +"\n" +
                 "Avaliação: " + avaliacao + "\n" +
                 "Total de Temporadas: " + totalTemporadas + "\n"+
