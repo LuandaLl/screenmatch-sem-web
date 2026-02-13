@@ -1,3 +1,5 @@
+![Badge Em andamento](http://img.shields.io/static/v1?label=STATUS&message=%20ANDAMENTO&color=yellow&style=for-the-badge)
+
 ## User Info
 Este projeto foi desenvolvido como parte do programa Oracle Next Education em parceria com a Alura.
 
