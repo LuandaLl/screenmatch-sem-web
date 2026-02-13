@@ -11,8 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "series") //nomeia a tabela no banco de dados
@@ -30,8 +30,9 @@ public class Serie {
     private  String atores;
     private String poster;
     private String sinopse;
-    @Transient //ignora a lista de episódios por enquanto
+    @OneToMany(mappedBy = "serie") //faz mapeamento com base no nome da outra classe 
     private List<Episodio> episodios = new ArrayList<>();
+    
     
     public Serie(){}
     public Serie(DadosSerie dadosSeries) {
@@ -124,7 +125,6 @@ public class Serie {
 
     @Override
     public final String toString() {
-        // TODO Auto-generated method stub
         return   "Gênero: " + genero + "\n" +
                 "Titulo Série: " + titulo +"\n" +
                 "Avaliação: " + avaliacao + "\n" +

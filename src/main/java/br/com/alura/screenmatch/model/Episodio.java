@@ -1,14 +1,30 @@
 package br.com.alura.screenmatch.model;
-
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+@Entity
+@Table(name = "episodios")
 public class Episodio {
+
+    @Id //identifica a chave padrão
+    @GeneratedValue(strategy =GenerationType.IDENTITY) //Define a estrateǵia de geração de id
+    private Long id;
+    @ManyToOne
+    private Serie serie;
     private Integer temporada;
     private String titulo;
-   private Integer numeroEpisodio;
-   private double avaliacao;
+    private Integer numeroEpisodio;
+    private double avaliacao;
     private LocalDate dataLancamento;
 
     public Episodio(Integer numeroTemporada, DadosEpisodios dadosEpisodios) {
@@ -68,6 +84,23 @@ public class Episodio {
     public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
+    
 
     @Override
     public String toString() {
