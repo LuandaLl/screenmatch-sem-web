@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +32,10 @@ public class Serie {
     private  String atores;
     private String poster;
     private String sinopse;
-    @OneToMany(mappedBy = "serie", cascade=CascadeType.ALL) //faz mapeamento com base no nome da outra classe 
+    //faz mapeamento com base no nome do atributo de Episodios
+    // Cascade ajuda com a persistenia, se salvar, deletar ou atualizar uma serie ela fara o mesmo para todos os episodios
+    // Fetch força trazer os episoidios imediatamente
+    @OneToMany(mappedBy = "serie", cascade=CascadeType.ALL, fetch= FetchType.EAGER) 
     private List<Episodio> episodios = new ArrayList<>();
     
 
@@ -39,11 +43,21 @@ public class Serie {
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();
         this.avaliacao = Optional.ofNullable(Double.valueOf(dadosSeries.avaliacao())).orElse(0.0);        
-        this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim()); //pega o enum por string, separa por virgula e ignora espaços vazios
-        this.poster = dadosSeries.poster();
-        this.sinopse = ConsultaMyMemory.obterTraducao(dadosSeries.sinopse()).trim();  
+        this.poster = dadosSeries.poster(); 
         this.titulo = dadosSeries.titulo();
         this.totalTemporadas = dadosSeries.totalTemporadas();
+        try {
+           this.genero = Categoria.fromString(dadosSeries.genero().split(",")[0].trim());
+
+        } catch (Exception e) {
+            System.out.println("Categoria não encontrada. " + e);
+        }
+        try{
+            String traducao = ConsultaMyMemory.obterTraducao(dadosSeries.sinopse());
+
+        } catch(Exception e) {
+            System.out.println("Não foi possivel realizar a tradução. " + e);
+        }
 
     }
 
@@ -120,6 +134,8 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        //adicionando chave estrangeira de episodios para chave
+        episodios.forEach(e-> e.setSerie(this));
         this.episodios = episodios;
     }
 
@@ -132,8 +148,8 @@ public class Serie {
                 "Total de Temporadas: " + totalTemporadas + "\n"+
                 "Atores: " + atores + "\n" +
                 "Poster: " + poster + "\n" +
-                "Sinopese: " + sinopse + "\n"
-            
+                "Sinopese: " + sinopse + "\n" +
+                "Episódios: " + episodios + "\n"
                 ;
     }
 
