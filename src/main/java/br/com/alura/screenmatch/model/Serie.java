@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.alura.screenmatch.service.ConsultaMyMemory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,10 +31,10 @@ public class Serie {
     private  String atores;
     private String poster;
     private String sinopse;
-    @OneToMany(mappedBy = "serie") //faz mapeamento com base no nome da outra classe 
+    @OneToMany(mappedBy = "serie", cascade=CascadeType.ALL) //faz mapeamento com base no nome da outra classe 
     private List<Episodio> episodios = new ArrayList<>();
     
-    
+
     public Serie(){}
     public Serie(DadosSerie dadosSeries) {
         this.atores = dadosSeries.atores();

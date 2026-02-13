@@ -34,6 +34,7 @@ public class Principal {
     private ConverteDados conversor = new ConverteDados();
     private List<DadosSerie> listaSerie = new ArrayList<>();
     private List<Episodio> episodios = new ArrayList<>();
+    private List<Serie> series = new ArrayList<>();
     private List<DadosTemporada> temporadas = new ArrayList<>();
     private SerieRepository repositorio;
 
@@ -110,25 +111,45 @@ public class Principal {
     }
 
     private void buscarEpisodioPorSerie() {
-        DadosSerie dadosSerie = getDadosSerie();
-        temporadas.clear(); // Limpa busca anterior
+        listarSerieBuscada();
+        System.out.println("Escolha uma seŕie pelo nome:");
+         var nomeSerie = leitura.nextLine();
+        
+        Optional<Serie> serie = series.stream()
+                        .filter( s-> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                        .findFirst();
+        
+        if(serie.isPresent()){ 
+            var serieEncontrada = serie.get();
+            temporadas.clear(); // Limpa busca anterior
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            var json = consumoApi.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
-            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
-            temporadas.add(dadosTemporada);
+            for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+                var json = consumoApi.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+                DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                temporadas.add(dadosTemporada);
+            }
+            temporadas.forEach(System.out::println);
+
+            // Converte para a lista de Episodios para as outras funções usarem
+            episodios = temporadas.stream()
+                    .flatMap(t -> t.episodios().stream()
+                            .map(d -> new Episodio(t.numeroTemporada(), d)))
+                    .collect(Collectors.toList());
+
+            List<Episodio> episodios = temporadas.stream()
+                            .flatMap(d -> d.episodios().stream()
+                                    .map(e -> new Episodio(e.numero(), e)))
+                                    .collect(Collectors.toList());
+            
+            serieEncontrada.setEpisodios(episodios);
+            repositorio.save(serieEncontrada);
+        } else{
+            System.out.println("Série não");
         }
-        temporadas.forEach(System.out::println);
-
-        // Converte para a lista de Episodios para as outras funções usarem
-        episodios = temporadas.stream()
-                .flatMap(t -> t.episodios().stream()
-                        .map(d -> new Episodio(t.numeroTemporada(), d)))
-                .collect(Collectors.toList());
     }
 
     private void listarSerieBuscada() {
-        List<Serie> series = repositorio.findAll();        
+        series = repositorio.findAll();        
         series.stream()
                     .sorted(Comparator.comparing(Serie::getGenero))
                     .forEach(System.out::println);
