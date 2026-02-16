@@ -53,9 +53,10 @@ public class Principal {
                 4 - Buscar série por titulo
                 5- Buscar episódio por trecho
                 6- Buscar Serie por ator
-                7 - Listar top 5 episodios
-                8 - Filtrar episódios por data
-                9 - Ver estatísticas
+                7- Top 5 series
+                8 - Listar top 5 episodios
+                9 - Filtrar episódios por data
+                10 - Ver estatísticas
                 
                 0 - Sair
                 """;
@@ -85,12 +86,15 @@ public class Principal {
                     buscarSeriePorAtor();
                     break;
                 case 7:
+                    buscarTop5Series();
+                    break;
+                case 8:
                      exibirTop5Episodios();
                      break;
-                case 8:
+                case 9:
                     filtrarEpisodiosPorData();
                     break;
-                case 9:
+                case 10:
                     exibirEstatisticas();
                     break;
          
@@ -184,14 +188,22 @@ public class Principal {
         var nomeAtor = leitura.nextLine();
         System.out.println("Deseja ver series a partir de que nota?");
         var avaliacao = leitura.nextDouble();
-        List<Serie> seriesEncontradas = repositorio.
-        findByAtoresContainsIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
+        List<Serie> seriesEncontradas = repositorio.findByAtoresContainsIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
         System.out.println("Seŕies em que " +nomeAtor + " trabalhou");
         
         seriesEncontradas.forEach(s->
             System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao())
         );
+
     }
+
+    private void  buscarTop5Series(){
+        List <Serie> topSeries = repositorio.findTop5ByOrderByAvaliacao();
+        topSeries.forEach(s->
+            System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao())
+        );
+    }
+
 
 
     private void buscarEpisodioPorTrecho() {
