@@ -70,7 +70,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
-	</dependencies>
+	
+   <dependency>
+     <groupId>br.com.codecode</groupId>
+     <artifactId>vlocadora-core</artifactId>
+     <version>6.0</version>
+   </dependency>
+ </dependencies>
 
 	<build>
 		<plugins>

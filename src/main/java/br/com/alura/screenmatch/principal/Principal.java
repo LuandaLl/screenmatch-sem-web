@@ -18,6 +18,7 @@ import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
+import br.com.alura.screenmatch.model.Categoria;
 import io.github.cdimascio.dotenv.Dotenv;
 
 
@@ -47,16 +48,22 @@ public class Principal {
         var opcao = -1;
         var menu = """
 
+                Busca Series:
+
                 1 - Buscar série
-                2 - Buscar episódios da série
+                2 - Listar episódios da série
                 3 - Listar séries buscadas
                 4 - Buscar série por titulo
-                5- Buscar episódio por trecho
-                6- Buscar Serie por ator
-                7- Top 5 series
-                8 - Listar top 5 episodios
-                9 - Filtrar episódios por data
-                10 - Ver estatísticas
+                5- Buscar Serie por ator
+                6- Busca por categoria
+                7- Top 5 Serie
+                8- Busca Serie Por total de temporada
+
+                Busca :Episodios Da serie
+                9- Busca EPisódio Por trecho
+                10 - Listar top 5 episodios
+                11 - Filtrar episódios por data
+                12 - Ver estatísticas
                 
                 0 - Sair
                 """;
@@ -80,23 +87,30 @@ public class Principal {
                     buscarSeriePorTitulo();
                     break;
                 case 5:
-                    buscarEpisodioPorTrecho();
+                    buscarSeriePorAtor();
                     break;
                 case 6:
-                    buscarSeriePorAtor();
+                    buscarSeriePorCategoria();
                     break;
                 case 7:
                     buscarTop5Series();
                     break;
                 case 8:
-                     exibirTop5Episodios();
+                    buscaSeriePorTotalTemporada();
                      break;
                 case 9:
-                    filtrarEpisodiosPorData();
+                     buscarEpisodioPorTrecho();
                     break;
                 case 10:
+                     exibirTop5Episodios();
+                    break;
+                case 11:
+                    filtrarEpisodiosPorData();
+                    break;
+                case 12:
                     exibirEstatisticas();
                     break;
+
          
                 case 0:
                     System.out.println("Saindo...");
@@ -193,15 +207,38 @@ public class Principal {
         
         seriesEncontradas.forEach(s->
             System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao())
+
         );
 
     }
 
+     private void buscarSeriePorCategoria(){
+        System.out.println("Digite a categoria desejada");
+        var nomeGenero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(nomeGenero);
+        List<Serie> seriePorCategoria = repositorio.findByGenero(categoria);
+        System.out.println("Séries da categoria: " +nomeGenero);
+        seriePorCategoria.forEach(System.out::println);
+     }
+
+
     private void  buscarTop5Series(){
-        List <Serie> topSeries = repositorio.findTop5ByOrderByAvaliacao();
+        List <Serie> topSeries = repositorio.findTop5ByOrderByAvaliacaoDesc();
         topSeries.forEach(s->
             System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao())
         );
+    }
+
+    private void buscaSeriePorTotalTemporada(){
+        System.out.println("Digite o total de temporadas desejado: ");
+        var totalTemporada = leitura.nextInt();
+        Double avaliacao = 8.5;
+
+        List<Serie> seriePorTemporada = repositorio.
+        findByTotalTemporadasAndAvaliacaoGreaterThanEqual(totalTemporada, avaliacao);
+
+        System.out.println("Séries com " + totalTemporada + " temporadas: ");
+        seriePorTemporada.forEach(s-> System.out.println(s.getTitulo() + " temporadas: " + s.getTotalTemporadas() + " avaliaão: " + s.getAvaliacao()));
     }
 
 
