@@ -52,9 +52,10 @@ public class Principal {
                 3 - Listar séries buscadas
                 4 - Buscar série por titulo
                 5- Buscar episódio por trecho
-                6 - Listar top 5 episodios
-                7 - Filtrar episódios por data
-                8 - Ver estatísticas
+                6- Buscar Serie por ator
+                7 - Listar top 5 episodios
+                8 - Filtrar episódios por data
+                9 - Ver estatísticas
                 
                 0 - Sair
                 """;
@@ -81,12 +82,15 @@ public class Principal {
                     buscarEpisodioPorTrecho();
                     break;
                 case 6:
+                    buscarSeriePorAtor();
+                    break;
+                case 7:
                      exibirTop5Episodios();
                      break;
-                case 7:
+                case 8:
                     filtrarEpisodiosPorData();
                     break;
-                case 8:
+                case 9:
                     exibirEstatisticas();
                     break;
          
@@ -174,6 +178,21 @@ public class Principal {
             System.out.println("Série não encontrada");
         }
     }
+
+    private void  buscarSeriePorAtor(){
+        System.out.println("Digite nome do ator para busca");
+        var nomeAtor = leitura.nextLine();
+        System.out.println("Deseja ver series a partir de que nota?");
+        var avaliacao = leitura.nextDouble();
+        List<Serie> seriesEncontradas = repositorio.
+        findByAtoresContainsIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
+        System.out.println("Seŕies em que " +nomeAtor + " trabalhou");
+        
+        seriesEncontradas.forEach(s->
+            System.out.println(s.getTitulo() + " avaliação: " + s.getAvaliacao())
+        );
+    }
+
 
     private void buscarEpisodioPorTrecho() {
         if (episodios.isEmpty()) {
