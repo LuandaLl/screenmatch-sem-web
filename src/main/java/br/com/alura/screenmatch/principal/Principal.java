@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.DadosEpisodios;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
@@ -18,7 +19,6 @@ import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
-import br.com.alura.screenmatch.model.Categoria;
 import io.github.cdimascio.dotenv.Dotenv;
 
 
@@ -231,37 +231,33 @@ public class Principal {
 
     private void buscaSeriePorTotalTemporada(){
         System.out.println("Digite o total de temporadas desejado: ");
-        var totalTemporada = leitura.nextInt();
-        Double avaliacao = 8.5;
+        int totalTemporada = leitura.nextInt();
+        System.out.println("Digite a avaliação desejada: ");
+        var avaliacao = leitura.nextDouble();
+        List<Serie> seriePorTemporada = repositorio.seriesPorTemporadaEAvaliacao(totalTemporada,avaliacao);
 
-        List<Serie> seriePorTemporada = repositorio.
-        findByTotalTemporadasAndAvaliacaoGreaterThanEqual(totalTemporada, avaliacao);
 
         System.out.println("Séries com " + totalTemporada + " temporadas: ");
         seriePorTemporada.forEach(s-> System.out.println(s.getTitulo() + " temporadas: " + s.getTotalTemporadas() + " avaliaão: " + s.getAvaliacao()));
+   
     }
 
 
 
     private void buscarEpisodioPorTrecho() {
-        if (episodios.isEmpty()) {
-            System.out.println("Primeiro busque os episódios de uma série (Opção 2)!");
-            return;
-        }
         System.out.println("Digite o nome do episódio desejado: ");
         var trechoTitulo = leitura.nextLine();
-        Optional<Episodio> episodioBuscado = episodios.stream()
-                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
-                .findFirst();
-
-        if (episodioBuscado.isPresent()) {
-            System.out.println("Episódio encontrado");
-            System.out.println("Temporada: " + episodioBuscado.get().getTemporada() + 
-                               " - " + episodioBuscado.get().getTitulo());
-        } else {
-            System.out.println("Episódio não encontrado");
-        }
+        List<Episodio> episodiosEncontrados = repositorio.episodiosPorTrecho(trechoTitulo);
+            if (episodiosEncontrados.isEmpty()) {
+        System.out.println("Nenhum episódio encontrado com esse nome.");
+    } else {
+        episodiosEncontrados.forEach(e -> 
+            System.out.printf("Série: %s Temporada: %s Episódio %s - %s%n",
+                e.getSerie().getTitulo(), e.getTemporada(), 
+                e.getNumeroEpisodio(), e.getTitulo()));
     }
+}
+    
 
       private void exibirTop5Episodios() {
         if (temporadas.isEmpty()) {
