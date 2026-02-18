@@ -1,6 +1,4 @@
 package br.com.alura.screenmatch.principal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
@@ -271,24 +269,18 @@ public class Principal {
     }
 
     private void filtrarEpisodiosPorData() {
-        if (episodios.isEmpty()) {
-            System.out.println("Primeiro busque os episódios de uma série (Opção 2)!");
-            return;
-        }
-        System.out.println("A partir de que ano você deseja ver os episódios?");
+        buscarSeriePorTitulo();
+        if(serieBusca.isPresent()){
+
+        System.out.println("DIgite o ano limite de lançamento");
         var ano = leitura.nextInt();
         leitura.nextLine();
 
-        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        episodios.stream()
-                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
-                .forEach(e -> System.out.println(
-                        "Temporada: " + e.getTemporada() +
-                                " Episódio: " + e.getNumeroEpisodio() +
-                                " Data Lançamento: " + e.getDataLancamento().format(formatador)
-                ));
+        
+        Serie serie = serieBusca.get();
+        List<Episodio> episodiosAno = repositorio.episodiosPorSerieEAno(ano, serie);
+        episodiosAno.forEach(System.out::println);
+        }
     }
 
     private void exibirEstatisticas() {
