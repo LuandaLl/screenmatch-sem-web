@@ -11,7 +11,6 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import br.com.alura.screenmatch.model.Categoria;
-import br.com.alura.screenmatch.model.DadosEpisodios;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
@@ -37,6 +36,7 @@ public class Principal {
     private List<Serie> series = new ArrayList<>();
     private List<DadosTemporada> temporadas = new ArrayList<>();
     private SerieRepository repositorio;
+    private Optional<Serie> serieBusca;
 
    
 
@@ -187,10 +187,10 @@ public class Principal {
         System.out.println("Escolha uma seŕie pelo nome:");
          var nomeSerie = leitura.nextLine();
         
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBusca = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
-        if(serieBuscada.isPresent()){
-            System.out.println("Dados da série: " + serieBuscada.get());
+        if(serieBusca.isPresent()){
+            System.out.println("Dados da série: " + serieBusca.get());
 
         } else{
             System.out.println("Série não encontrada");
@@ -260,21 +260,14 @@ public class Principal {
     
 
       private void exibirTop5Episodios() {
-        if (temporadas.isEmpty()) {
-            System.out.println("Primeiro busque os episódios de uma série (Opção 2)!");
-            return;
+        buscarSeriePorTitulo();
+        if(serieBusca.isPresent()){
+            Serie serie = serieBusca.get();
+            List<Episodio> topEpisodio = repositorio.topEpisodioPorSerie(serie);
+            topEpisodio.forEach(e->System.out.printf("Série: %s Temporada: %s Episódio %s - Avaliação: %.2f %s%n",
+                e.getSerie().getTitulo(), e.getTemporada(), 
+                e.getNumeroEpisodio(), e.getAvaliacao(), e.getTitulo()));
         }
-        System.out.println("\nTop 5 Episódios:");
-        List<DadosEpisodios> dadosTodosEpisodios = temporadas.stream()
-                .flatMap(t -> t.episodios().stream())
-                .collect(Collectors.toList());
-
-        dadosTodosEpisodios.stream()
-                .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
-                .sorted(Comparator.comparing(DadosEpisodios::avaliacao).reversed())
-                .limit(5)
-                .map(e -> e.titulo().toUpperCase())
-                .forEach(System.out::println);
     }
 
     private void filtrarEpisodiosPorData() {

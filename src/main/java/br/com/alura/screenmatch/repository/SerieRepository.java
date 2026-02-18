@@ -19,11 +19,14 @@ public interface  SerieRepository extends JpaRepository<Serie, Long>{
     List<Serie> findByGenero(Categoria categoria);
     List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(Integer totalTemporada, double avaliacao);
 
-    @Query(value ="select s from Serie s  WHERE s.totalTemporadas <= :totalTemporada and s.avaliacao >= :avaliacao ")
+    @Query("select s from Serie s  WHERE s.totalTemporadas <= :totalTemporada and s.avaliacao >= :avaliacao ")
     List<Serie> seriesPorTemporadaEAvaliacao(Integer totalTemporada, double avaliacao);
 
 
-    @Query(value ="select e from Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trechoTitulo% ") //ILIKE é semelhante ao ignorecase
+    @Query("select e from Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trechoTitulo% ") //ILIKE é semelhante ao ignorecase
     List<Episodio> episodiosPorTrecho(String trechoTitulo);
+
+    @Query("select e from Serie s JOIN s.episodios e WHERE s = :serie ORDER BY e.avaliacao DESC LIMIT 5") 
+    List<Episodio> topEpisodioPorSerie(Serie serie);
     
 }
